@@ -1,0 +1,103 @@
+/* Header Styling */
+
+.jumbotron {
+    background-image: url("/images/cover3.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    height: 100vh;
+}
+
+.jumbotron hr {
+    width: 22rem;
+}
+
+#brand {
+    font-family: 'Dancing Script', 'Helvetica Neue', Helvetica, Arial;
+    font-size: 2rem !important;
+}
+
+#my-nav a {
+    font-size: 1.25rem;
+    position: relative;
+}
+
+#dropdown a {
+    font-size: 1rem;
+}
+
+.hover-ef::after {
+    content: '';
+    top: 0;
+    left: 0;
+    transform: translateY(10px);
+    transition: transform 0.3s ease;
+    opacity: 0;
+    height: 100%;
+    width: 100%;
+    border-bottom: 2px solid #343a40;
+    position: absolute;
+}
+
+.hover-ef:hover::after {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+#sell-btn {
+    color: #033C71;
+    border-color: #033C71;
+}
+
+#sell-btn:hover {
+    color: #FFFFFF;
+    background-color: #033C71;
+}
+
+/* About Us */
+
+#about-us {
+    height: 100vh;
+}
+
+.about-image {
+    background-image: url("/images/about1.jpg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+}
+
+/* buy.html */
+
+#buy-top {
+    height: 500px;
+    background-image: url("/images/buy.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    margin-top: 60px;
+}
+
+#items {
+    height: 100vh;
+}
+
+
+/* Footer */
+
+footer {
+    text-align: center;
+    padding: 20px;
+}
+
+@media only screen and (max-width: 768px) {
+    .jumbotron {
+        background-image: url("/images/cover3.jpg");
+        background-position: -150px 0px;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-attachment: fixed;
+    }
+}
