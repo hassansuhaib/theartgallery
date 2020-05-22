@@ -84,7 +84,6 @@
 
 #buy-top {
     height: 150px;
-    background-image: url('http://127.0.0.1:5000/static/images/buy.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
