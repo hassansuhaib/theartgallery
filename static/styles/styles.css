@@ -1,7 +1,6 @@
 /* Header Styling */
 
 .jumbotron {
-    background-image: url("/images/cover3.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -45,6 +44,11 @@
     transform: translateY(0);
 }
 
+.navbar.scrolled {
+    background-color: #FFFFFF;
+    transition: background 250ms;
+}
+
 #sell-btn {
     color: #033C71;
     border-color: #033C71;
@@ -62,7 +66,7 @@
 }
 
 .about-image {
-    background-image: url("/images/about1.jpg");
+    background-image: url('/images/about.jpg');
     background-position: center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -70,31 +74,52 @@
 
 /* buy.html */
 
+#market {
+    padding-top: 60px;
+}
+
+#products {
+    width: 100%;
+}
+
 #buy-top {
-    height: 500px;
-    background-image: url("/images/buy.jpg");
+    height: 150px;
+    background-image: url('http://127.0.0.1:5000/static/images/buy.jpg');
     background-position: center;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
-    margin-top: 60px;
 }
 
-#items {
-    height: 100vh;
+/* Cards */
+
+.inner {
+    overflow: hidden;
 }
 
+.inner img {
+    transition: all 500ms ease;
+}
+
+.inner:hover img {
+    transform: scale(1.5);
+}
 
 /* Footer */
 
 footer {
     text-align: center;
     padding: 20px;
+    bottom: 0;
+    left: 0;
+    right: 0;
 }
 
 @media only screen and (max-width: 768px) {
-    .jumbotron {
-        background-image: url("/images/cover3.jpg");
+    .navbar {
+        background-color: white;
+    }
+    .jumbotron {    
         background-position: -150px 0px;
         background-repeat: no-repeat;
         background-size: cover;

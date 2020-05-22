@@ -1,0 +1,45 @@
+{% extends 'layout.html' %}
+{% block title %}
+    The Art Gallery
+{% endblock %}
+
+{% block main %}
+    <div class="content">
+        <section id="welcome">
+            <div class="jumbotron d-flex flex-column justify-content-center"
+                style="background-image: url({{ url_for('static', filename='images/cover3.jpg') }});">
+                <div class="container">
+                    <h1 class="display-4" style="font-family: 'Dancing Script', 'Helvetica Neue', Helvetica, Arial;">The Art
+                        Gallery
+                    </h1>
+                    <p class="lead">A place where you can buy and sell art.</p>
+                    <hr class="my-4 ml-0">
+                    <p class="lead">
+                        <a id="buy-btn" class="btn btn-outline-success btn-lg px-5" href="/buy" role="button">Buy</a>
+                        <a id="sell-btn" class="btn btn-outline-success btn-lg px-5 ml-3" href="/sell"
+                            role="button">Sell</a>
+                    </p>
+                </div>
+            </div>
+        </section>
+        <section id="about-us" class="d-flex flex-column justify-content-center">
+            <div class="container d-flex">
+                <div class="about-content col-lg-9 col-12 col-md-7">
+                    <h2 class="display-3">About Us.</h2>
+                    <p class="mt-5">Lorem ipsum dolor sit amet consectetur adipisicing elit. Perferendis asperiores impedit
+                        excepturi, quibusdam, architecto consequuntur esse labore, assumenda possimus beatae vitae cum neque
+                        blanditiis cumque sapiente sed illum illo laudantium?
+                        Optio eveniet non nulla voluptatibus nemo doloribus, vel quos ducimus obcaecati! Totam quasi,
+                        dolorum obcaecati, natus dolore expedita rerum magnam numquam repellat est accusamus quibusdam
+                        eveniet modi minima sint qui!
+                        Provident fugit eum dolor magnam, officia nihil numquam. Velit sequi esse laboriosam ipsum corporis
+                        iusto unde eaque! Facilis, neque. Odio harum minus omnis tempore molestiae mollitia laudantium ex
+                        incidunt quae.</p>
+                </div>
+                <div class="about-image col-lg-3 col-md-5 d-none d-md-block"
+                    style="background-image: url({{ url_for('static', filename='images/about1.jpg') }});">
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
