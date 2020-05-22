@@ -4,4 +4,5 @@
 **Functionality:** The user can register or login and buy or sell paintings.
 
 **Frontend:** I am using CSS, Bootstrap, and JavaScript for Frontend.
+
 **Backend:** I am using Python, Flask, and SQLITE3 for Backend.
