@@ -1,0 +1,36 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Register
+{% endblock %}
+
+{% block main %}
+<section id="register">
+    <div id="register-top" class="d-flex flex-column justify-content-center align-items-center top" style="
+            background-image: url({{ url_for('static', filename='images/register.jpg') }});">
+        <h2 class="display-3 font-weight-bold" style="color:white;">Login</h2>
+    </div>
+    <div id="register-form" class="container col-8 col-sm-6 col-lg-3 mt-5">
+        <form>
+            <div class="form-group">
+                <label for="inputName">Username</label>
+                <input type="text" name="name" class="form-control" id="inputName" aria-describedby="emailHelp">
+
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password:</label>
+                <input type="password" name="password" class="form-control" id="inputPassword">
+                <small id="passwordHelp" class="form-text text-muted">Don't use a password that you use
+                    universally.</small>
+            </div>
+            <div class="form-group">
+                <label for="inputPassword">Password Again:</label>
+                <input type="password" name="secPassword" class="form-control" id="secPassword">
+            </div>
+            <div class="form-group d-flex justify-content-center">
+                <button type="submit" class="btn btn-primary">Register</button>
+            </div>
+        </form>
+    </div>
+</section>
+{% endblock %}

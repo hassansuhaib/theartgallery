@@ -45,6 +45,15 @@ def login():
     # Remember which user has logged in
     # session["user_id"] = rows[0]["id"]
 
+@app.route("/register", methods=["GET", "POST"])
+def register():
+    """Register a new user"""
+    session.clear()
+
+    if request.method == "GET":
+        return render_template("register.html")
+    else:
+        return redirect("/")
 
 @app.route("/logout")
 def logout():

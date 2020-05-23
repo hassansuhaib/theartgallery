@@ -1,0 +1,30 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Login
+{% endblock %}
+
+{% block main %}
+    <section id="login">
+        <div id="login-top" class="d-flex flex-column justify-content-center align-items-center top" style="
+            background-image: url({{ url_for('static', filename='images/login.jpg') }});">
+            <h2 class="display-3 font-weight-bold" style="color:white;">Login</h2>
+        </div>
+        <div id="login-form" class="container col-8 col-sm-6 col-lg-3 mt-5">
+            <form>
+                <div class="form-group">
+                    <label for="inputName">Username</label>
+                    <input type="text" name="name" class="form-control" id="inputName" aria-describedby="emailHelp">
+                
+                </div>
+                <div class="form-group">
+                    <label for="inputPassword">Password:</label>
+                    <input type="password" name="password" class="form-control" id="inputPassword">
+                </div>
+                <div class="form-group d-flex justify-content-center">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+    </section>
+{% endblock %}
