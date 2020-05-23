@@ -14,7 +14,7 @@
 
 <body>
     <header>
-        <nav id="my-nav" class="navbar navbar-expand-md navbar-light fixed-top py-0">
+        <nav id="my-nav" class="navbar navbar-expand-md navbar-light fixed-top py-0" {% block styleCart %}  {% endblock %}>
             <a id="brand" class="navbar-brand ml-lg-5" href="/">The Art Gallery</a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent"
                 aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,24 +23,33 @@
 
             <div class="collapse navbar-collapse mr-lg-5" id="navbarContent">
                 <ul class="navbar-nav ml-auto">
-                    <li class="nav-item">
-                        <a class="nav-link hover-ef" href="/buy">Buy<span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hover-ef" href="/sell">Sell<span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link hover-ef" href="/cart">Cart<span class="sr-only">(current)</span></a>
-                    </li>
-                    <li class="nav-item dropdown ml-3">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
-                            aria-haspopup="true" aria-expanded="false">
-                            hassan_suhaib
-                        </a>
-                        <div id="dropdown" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <a class="dropdown-item" href="#">Log Out</a>
-                        </div>
-                    </li>
+                    {% if session.user_id %}
+                        <li class="nav-item {% block activeBuy %} {% endblock %}">
+                            <a class="nav-link hover-ef" href="/buy">Buy<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item {% block activeSell %} {% endblock %}">
+                            <a class="nav-link hover-ef" href="/sell">Sell<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item {% block activeCart %} {% endblock %}">
+                            <a class="nav-link hover-ef" href="/cart">Cart<span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item dropdown ml-3">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
+                                hassan_suhaib
+                            </a>
+                            <div id="dropdown" class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <a class="dropdown-item" href="#">Log Out</a>
+                            </div>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link hover-ef" href="/login">Login <span class="sr-only">(current)</span></a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link hover-ef" href="/register">Register <span class="sr-only">(current)</span></a>
+                        </li>
+                    {% endif %}
                 </ul>
             </div>
         </nav>
@@ -49,7 +58,7 @@
         {% block main %}
         {% endblock %}
     </main>
-    <footer>The Art Gallery 2020. All rights Reserved</footer>
+    <footer>The Art Gallery 2020. All rights Reserved.</footer>
 
     <script src="/static/bootstrap/jquery.min.js"></script>
     <script src="/static/bootstrap/popper.min.js"></script>

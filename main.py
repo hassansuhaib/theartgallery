@@ -37,12 +37,16 @@ def login():
     #clear session if any previous users
     session.clear()
 
+    if request.method == "GET":
+        return render_template("login.html")
+    else:
+        return redirect("/")
+
     # Remember which user has logged in
     # session["user_id"] = rows[0]["id"]
 
 
 @app.route("/logout")
-@login_required
 def logout():
     """Log user out"""
 
@@ -53,7 +57,6 @@ def logout():
     return redirect("/")
 
 @app.route("/buy", methods=["GET", "POST"])
-@login_required
 def buy():
     if request.method == "GET":
         return render_template("buy.html")
@@ -61,13 +64,18 @@ def buy():
         return redirect("/")
 
 @app.route("/sell", methods=["GET", "POST"])
-@login_required
 def sell():
     if request.method == "GET":
         return render_template("sell.html")
     else:
         return redirect("/")
 
+@app.route("/cart", methods=["GET", "POST"])
+def cart():
+    if request.method == "GET":
+        return render_template("cart.html")
+    else:
+        return redirect("/")
 
 def errorhandler(e):
     """Handle error"""
@@ -81,4 +89,4 @@ for code in default_exceptions:
     app.errorhandler(code)(errorhandler)
 
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)

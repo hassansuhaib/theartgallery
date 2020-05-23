@@ -74,7 +74,7 @@
 
 /* buy.html */
 
-#market {
+#market, #sell-products, #cart {
     padding-top: 60px;
 }
 
@@ -82,9 +82,9 @@
     width: 100%;
 }
 
-#buy-top {
+#buy-top, #sell-top, #cart-top {
     height: 150px;
-    background-position: center;
+    background-position: center bottom;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: fixed;
@@ -104,6 +104,24 @@
     transform: scale(1.5);
 }
 
+/* Sell.html */
+
+/* Cart.html */
+
+
+main table {
+    text-align: left;
+}
+
+main tfoot {
+    font-weight: bold;
+}
+
+.table th {
+    border-top: none;
+}
+
+
 /* Footer */
 
 footer {
@@ -118,10 +136,12 @@ footer {
     .navbar {
         background-color: white;
     }
-    .jumbotron {    
+    .jumbotron {
         background-position: -150px 0px;
         background-repeat: no-repeat;
         background-size: cover;
         background-attachment: fixed;
     }
 }
+
+@media only screen and (max-width: 992px) {}
