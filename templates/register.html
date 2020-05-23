@@ -8,9 +8,9 @@ Register
 <section id="register">
     <div id="register-top" class="d-flex flex-column justify-content-center align-items-center top" style="
             background-image: url({{ url_for('static', filename='images/register.jpg') }});">
-        <h2 class="display-3 font-weight-bold" style="color:white;">Login</h2>
+        <h2 class="display-3 font-weight-bold" style="color:white;">Register</h2>
     </div>
-    <div id="register-form" class="container col-8 col-sm-6 col-lg-3 mt-5">
+    <div id="register-form" class="container col-8 col-sm-6 col-lg-4 col-xl-3 mt-5">
         <form>
             <div class="form-group">
                 <label for="inputName">Username</label>
@@ -27,7 +27,7 @@ Register
                 <label for="inputPassword">Password Again:</label>
                 <input type="password" name="secPassword" class="form-control" id="secPassword">
             </div>
-            <div class="form-group d-flex justify-content-center">
+            <div class="form-group d-flex justify-content-center mt-5">
                 <button type="submit" class="btn btn-primary">Register</button>
             </div>
         </form>
