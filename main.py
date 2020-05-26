@@ -5,6 +5,7 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from brains import login_required
+import sqlite3
 
 # Configure application
 app = Flask(__name__, static_url_path='/static')
@@ -27,6 +28,13 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+# Establish a connection with the database
+db = sqlite3.connect('gallery.db')
+if conn:
+    print("Database connected successfully")
+else:
+    print("Couldn't open the database!")
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -37,10 +45,24 @@ def login():
     #clear session if any previous users
     session.clear()
 
-    if request.method == "GET":
-        return render_template("login.html")
-    else:
+    if request.method == "POST":
+        # Ensure username was submitted
+        if not request.form.get("username"):
+            return "<h1>Please provide a username!</h1>"
+        # Ensure password was submitted
+        elif not request.form.get("password"):
+            return "<h1>Please provide a password!</h1>"
+        rows = db.execute("SELECT * FROM users WHERE username = :username", username = request.form.get("username"))
+
+        if rows != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password"))
+            return "<h1>Wrong username or password!</h1>"
+        
+        # Remember which user has logged in
+        session["user_id"] = rows[0]["id"]
+        # Redirect to the homepage
         return redirect("/")
+    else:
+        return render_template("login.html")
 
     # Remember which user has logged in
     # session["user_id"] = rows[0]["id"]
@@ -53,6 +75,7 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     else:
+        
         return redirect("/")
 
 @app.route("/logout")
