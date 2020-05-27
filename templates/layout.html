@@ -36,10 +36,10 @@
                         <li class="nav-item dropdown ml-3">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
-                                hassan_suhaib
+                                {{ session.user_name }}
                             </a>
                             <div id="dropdown" class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <a class="dropdown-item" href="#">Log Out</a>
+                                <a class="dropdown-item" href="/logout">Log Out</a>
                             </div>
                         </li>
                     {% else %}

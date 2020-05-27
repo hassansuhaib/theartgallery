@@ -28,12 +28,6 @@ app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-# Establish a connection with the database
-db = sqlite3.connect('gallery.db')
-if conn:
-    print("Database connected successfully")
-else:
-    print("Couldn't open the database!")
 
 @app.route("/")
 def index():
@@ -52,13 +46,19 @@ def login():
         # Ensure password was submitted
         elif not request.form.get("password"):
             return "<h1>Please provide a password!</h1>"
-        rows = db.execute("SELECT * FROM users WHERE username = :username", username = request.form.get("username"))
-
-        if len(rows) != 1 or not check_password_hash(rows[0]["hash"], request.form.get("password")):
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            username = request.form.get("username")
+            db.execute(
+                "SELECT * FROM users WHERE username= ?",  (username,))
+            rows = db.fetchall()
+            print(rows)
+        if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
             return "<h1>Wrong username or password!</h1>"
         
         # Remember which user has logged in
-        session["user_id"] = rows[0]["id"]
+        session["user_id"] = rows[0][0]
+        session["user_name"] = rows[0][1]
         # Redirect to the homepage
         return redirect("/")
     else:
@@ -77,22 +77,25 @@ def register():
     else:
         if not request.form.get("name"):
             return "<h1>must provide a name</h1>"
-        elif not request.form.get("pass"):
+        elif not request.form.get("password"):
             return "<h1>must provide a password</h1>"
-        elif not request.form.get("secPass"):
+        elif not request.form.get("secPassword"):
             return "<h1>must provide the password again!</h1>"
         else:
             name = request.form.get("name")
-            password = request.form.get("pass")
-            secPass = request.form.get("secPass")
+            password = request.form.get("password")
+            secPass = request.form.get("secPassword")
             if password != secPass:
                 return "<h1>Passwords don't match!</h1>"
             else:
                 hashed = generate_password_hash(
                     password, method='pbkdf2:sha256', salt_length=8)
-                db.execute("INSERT INTO users (username, hash) VALUES(:username, :hashVal)",
-                           username=name, hashVal=hashed)
-        return redirect("/")
+                # Establish a connection with database and add data
+                with sqlite3.connect("gallery.db") as con:
+                    db = con.cursor()
+                    db.execute("INSERT INTO users (username, hash) VALUES(?,?)",(name, hashed))
+                    con.commit()
+        return redirect("/login")
 
 @app.route("/logout")
 def logout():
