@@ -167,7 +167,16 @@ def sell():
                 image.save(address)
                 print("Image saved!")
                 imageBinary = convert_to_binary(address)
-                
+                title = request.form.get("title")
+                price = request.form.get("price")
+                description = request.form.get("description")
+                if not title or not price or not description:
+                    return "<h1>All the info was not provided</h1>"
+                with sqlite3.connect("gallery.db") as con:
+                    db = con.cursor()
+                    db.execute(
+                        "INSERT INTO paintings (title, price, detail, photo) VALUES(?,?,?,?)", (title, price, description, imageBinary))
+                    con.commit()
                 return redirect("/")
             else:
                 return "<h1>That file extension is not allowed</h1>"
