@@ -1,0 +1,10 @@
+{
+    "sqltools.connections": [
+        {
+            "database": "${workspaceFolder}\\gallery.db",
+            "dialect": "SQLite",
+            "name": "gallery"
+        }
+    ],
+    "sqltools.useNodeRuntime": true
+}

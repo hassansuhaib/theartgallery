@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block activeBuy %}
-active
+    active
 {% endblock %}
 
 {% block main %}
@@ -18,52 +18,24 @@ active
             </div>
             <div class="container-lg">
                 <div id="items" class="row justify-content-center mt-5">
-                    <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                        <div class="card m-4 shadow bg-white rounded" style="width: 20rem;">
-                            <div class="inner">
-                                <img class="card-img-top" src="static/images/painting1.jpg" alt="Card image cap" height="180"
-                                    width="286">
+                        <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
+                            <div class="card m-4 shadow bg-white rounded" style="width: 20rem;">
+                                <div class="inner">
+                                    <img class="card-img-top" src="static/images/painting1.jpg" alt="Card image cap" height="180" width="286">
+                                </div>
+                                <div class="card-body text-center">
+                                    <h5 class="card-title">Abstract Art</h5>
+                                    <p class="card-text">Made by Paweł Czerwiński</p>
+                                    <p class="card-text font-weight-bold">Price: $459</p>
+                                    <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
+                                    <input type="text" name="id" value="2" style="display: none;">
+                                    <form action="/addToCart" method="post">
+                                        <input type="text" name="id" value="2" style="display: none;">
+                                        <button type=submit class="btn btn-success px-4">Buy</button>
+                                    </form>
+                                </div>
                             </div>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Abstract Art</h5>
-                                <p class="card-text">Made by Paweł Czerwiński</p>
-                                <p class="card-text font-weight-bold">Price: $459</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                                <a href="#" class="btn btn-success px-4">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                        <div class="card m-4 shadow bg-white rounded" style="width: 20rem;">
-                            <div class="inner">
-                                <img class="card-img-top" src="static/images/painting1.jpg" alt="Card image cap" height="180"
-                                    width="286">
-                            </div>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Abstract Art</h5>
-                                <p class="card-text">Made by Paweł Czerwiński</p>
-                                <p class="card-text font-weight-bold">Price: $459</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                                <a href="#" class="btn btn-success px-4">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
-                        <div class="card m-4 shadow bg-white rounded" style="width: 20rem;">
-                            <div class="inner">
-                                <img class="card-img-top" src="static/images/painting1.jpg" alt="Card image cap" height="180"
-                                    width="286">
-                            </div>
-                            <div class="card-body text-center">
-                                <h5 class="card-title">Abstract Art</h5>
-                                <p class="card-text">Made by Paweł Czerwiński</p>
-                                <p class="card-text font-weight-bold">Price: $459</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                                <a href="#" class="btn btn-success px-4">Buy</a>
-                            </div>
-                        </div>
-                    </div>
-                
+                        </div>          
                 </div>
             </div>
         </div>

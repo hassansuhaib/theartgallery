@@ -1,11 +1,17 @@
 from flask import Flask, redirect, url_for, render_template, request, session
 from flask_session import Session
 from tempfile import mkdtemp
+from werkzeug.utils import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from brains import login_required
+from brains import login_required, convert_to_binary
 import sqlite3
+from os.path import join
+
+# The location to store the uploaded images
+UPLOAD_FOLDER = r"D:\Coding\projects\the-art-gallery\static\uploads"
+ALLOWED_EXTENSIONS = set(['PNG', 'JPG', 'JPEG'])
 
 # Configure application
 app = Flask(__name__, static_url_path='/static')
@@ -21,12 +27,30 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
-
+# Configure upload folder for images
+app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
+app.config["ALLOWED_IMAGE_EXTENSIONS"] = ALLOWED_EXTENSIONS
 # Configure session to use filesystem (instead of signed cookies)
 app.config["SESSION_FILE_DIR"] = mkdtemp()
 app.config["SESSION_PERMANENT"] = False
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
+
+
+def allowed_image(filename):
+
+    # We only want files with a . in the filename
+    if not "." in filename:
+        return False
+
+    # Split the extension from the filename
+    ext = filename.rsplit(".", 1)[1]
+
+    # Check if the extension is in ALLOWED_IMAGE_EXTENSIONS
+    if ext.upper() in app.config["ALLOWED_IMAGE_EXTENSIONS"]:
+        return True
+    else:
+        return False
 
 
 @app.route("/")
@@ -52,13 +76,15 @@ def login():
             db.execute(
                 "SELECT * FROM users WHERE username= ?",  (username,))
             rows = db.fetchall()
-            print(rows)
         if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
             return "<h1>Wrong username or password!</h1>"
         
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
         session["user_name"] = rows[0][1]
+
+        # Adding an empty array as a cart for the user
+        session["cart"] = []
         # Redirect to the homepage
         return redirect("/")
     else:
@@ -93,7 +119,7 @@ def register():
                 # Establish a connection with database and add data
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
-                    db.execute("INSERT INTO users (username, hash) VALUES(?,?)",(name, hashed))
+                    db.execute("INSERT INTO users (username, hashvalue) VALUES(?,?)",(name, hashed))
                     con.commit()
         return redirect("/login")
 
@@ -108,20 +134,48 @@ def logout():
     return redirect("/")
 
 @app.route("/buy", methods=["GET", "POST"])
+@login_required
 def buy():
     if request.method == "GET":
         return render_template("buy.html")
     else:
         return redirect("/")
 
+@app.route("/addToCart", methods=["GET", "POST"])
+@login_required
+def addToCart():
+    if request.method == "POST":
+        session["cart"].append(request.form.get("id"))
+        return render_template("buy.html")
+    else:
+       return render_template("buy.html")
+
 @app.route("/sell", methods=["GET", "POST"])
+@login_required
 def sell():
     if request.method == "GET":
         return render_template("sell.html")
     else:
-        return redirect("/")
+        if request.files:
+            image = request.files["artImage"]
+            if image.filename =="":
+                return "<h1>Not a proper filename</h1>"
+            if allowed_image(image.filename):
+                filename = secure_filename(image.filename)
+                address = join(app.config["UPLOAD_FOLDER"], filename)
+                print("The address is: ", address)
+                image.save(address)
+                print("Image saved!")
+                imageBinary = convert_to_binary(address)
+                
+                return redirect("/")
+            else:
+                return "<h1>That file extension is not allowed</h1>"
+        else:
+            return "<h1>Upload unsuccessful!</h1>"
 
 @app.route("/cart", methods=["GET", "POST"])
+@login_required
 def cart():
     if request.method == "GET":
         return render_template("cart.html")

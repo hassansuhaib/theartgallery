@@ -30,10 +30,10 @@
                         <li class="nav-item {% block activeSell %} {% endblock %}">
                             <a class="nav-link hover-ef" href="/sell">Sell<span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item {% block activeCart %} {% endblock %}">
+                        <li class="nav-item {% block activeCart %} {% endblock %} {% block emptyCart %} {% endblock %}">
                             <a class="nav-link hover-ef" href="/cart">Cart<span class="sr-only">(current)</span></a>
                         </li>
-                        <li class="nav-item dropdown ml-3">
+                        <li class="nav-item dropdown ml-lg-3">
                             <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                                 {{ session.user_name }}

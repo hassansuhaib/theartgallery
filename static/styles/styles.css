@@ -12,6 +12,7 @@
     width: 22rem;
 }
 
+
 #brand {
     font-family: 'Dancing Script', 'Helvetica Neue', Helvetica, Arial;
     font-size: 2rem !important;
@@ -108,6 +109,9 @@
 
 /* Cart.html */
 
+.empty {
+    background-color: green;
+}
 
 main table {
     text-align: left;

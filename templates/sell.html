@@ -15,10 +15,10 @@ active
         <h2 class="display-3 font-weight-bold" style="color:white;">SELL</h2>
     </div>
     <div id="sell-form" class="container col-8 col-sm-6 col-lg-4 col-xl-3 mt-5">
-        <form enctype="multipart/form-data">
+        <form action="/sell" method="post" enctype="multipart/form-data">
             <div class="form-group">
                 <label for="inputName">Title</label>
-                <input type="text" name="name" class="form-control" id="inputName" aria-describedby="emailHelp">
+                <input type="text" name="title" class="form-control" id="inputName" aria-describedby="emailHelp">
             
             </div>
             <div class="form-group">
@@ -26,15 +26,15 @@ active
                 <input type="number" name="price" class="form-control" id="inputPrice">
             </div>
             <div class="form-group">
-                <label for="description" class="col-sm-2 col-form-label">Description: </label>
+                <label for="description">Description: </label>
                 <textarea class="form-control" name="description" id="description" rows="3"></textarea>
             </div>
             <div class="form-group">
-                <input type="file" name="image" id="file" class="inputFile">
+                <input type="file" name="artImage" id="file" class="inputFile">
             </div>
 
             <div class="form-group d-flex justify-content-center mt-5">
-                <button type="submit" class="btn btn-success px-5">Sell</button>
+                <button type="submit" class="btn btn-success px-5" value="Upload">Sell</button>
             </div>
         </form>
     </div>
