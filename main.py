@@ -203,12 +203,10 @@ def cart():
     if request.method == "GET":
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
-            print("The items in cart are: ", session["cart"])
-            sql_query = "select * from paintings where id in (" + ",".join(
-                (str(n) for n in session["cart"])) + ")"
-            db.execute(sql_query)
+            db.execute(f"SELECT * FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id= {session['user_id']})")
             print("query executed")
             rows = db.fetchall
+            print(rows)
             print("The value of rows is: ", rows)
             total = 0
             for row in rows:
