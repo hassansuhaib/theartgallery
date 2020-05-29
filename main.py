@@ -156,18 +156,11 @@ def addToCart():
         paintingId = request.form.get("id")
         if not paintingId:
             return "<h1>No Painting Id</h1>"
-        if session.get("cart") is None:
-            print("No cart in session")
-            session["cart"] = []
-        # Adding an empty array as a cart for the user
-        print("Session cart new call function", session["cart"])
-        myCart = session["cart"]
-        myCart.append(paintingId)
-        print("The cart is:", myCart)
-        session["cart"] = myCart
-        session.modified = True
-        print("Painting with id", paintingId, "added to cart!")
-        print("Here in add to cart:", session["cart"])
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(
+                "INSERT INTO cart (user_id, painting_id) VALUES(?,?)", (session["user_id"], paintingId))
+            con.commit()
         return redirect("/buy")
     else:
        return redirect("/buy")
