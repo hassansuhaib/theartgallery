@@ -6,8 +6,10 @@ from werkzeug.exceptions import default_exceptions, HTTPException, InternalServe
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from brains import login_required, convert_to_binary
+from os.path import join, basename
+from base64 import b64encode
+from datetime import datetime
 import sqlite3
-from os.path import join
 
 # The location to store the uploaded images
 UPLOAD_FOLDER = r"D:\Coding\projects\the-art-gallery\static\uploads"
@@ -18,6 +20,9 @@ app = Flask(__name__, static_url_path='/static')
 
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+
+# TO use basenmae filer in template using jinja 
+app.add_template_filter(basename)
 
 # Ensure responses aren't cached
 @app.after_request
@@ -137,7 +142,12 @@ def logout():
 @login_required
 def buy():
     if request.method == "GET":
-        return render_template("buy.html")
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(
+                "SELECT * FROM paintings ORDER BY id")
+            rows = db.fetchall()
+        return render_template("buy.html", rows=rows)
     else:
         return redirect("/")
 
@@ -166,16 +176,17 @@ def sell():
                 print("The address is: ", address)
                 image.save(address)
                 print("Image saved!")
-                imageBinary = convert_to_binary(address)
                 title = request.form.get("title")
+                artist = request.form.get("artist")
                 price = request.form.get("price")
-                description = request.form.get("description")
-                if not title or not price or not description:
+                now = datetime.now()
+                formattedDate = now.strftime('%Y-%m-%d %H:%M:%S')
+                if not title or not price or not artist:
                     return "<h1>All the info was not provided</h1>"
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
                     db.execute(
-                        "INSERT INTO paintings (title, price, detail, photo) VALUES(?,?,?,?)", (title, price, description, imageBinary))
+                        "INSERT INTO paintings (title, artist, price, imageAddress, additiondate) VALUES(?,?,?,?,?)", (title, artist, price, address, formattedDate))
                     con.commit()
                 return redirect("/")
             else:

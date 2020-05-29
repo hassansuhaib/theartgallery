@@ -21,4 +21,3 @@ def convert_to_binary(filename):
     return blobData
 
 
-
