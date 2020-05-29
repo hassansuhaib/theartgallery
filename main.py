@@ -88,8 +88,6 @@ def login():
         session["user_id"] = rows[0][0]
         session["user_name"] = rows[0][1]
 
-        # Adding an empty array as a cart for the user
-        session["cart"] = []
         # Redirect to the homepage
         return redirect("/")
     else:
@@ -155,10 +153,24 @@ def buy():
 @login_required
 def addToCart():
     if request.method == "POST":
-        session["cart"].append(request.form.get("id"))
-        return render_template("buy.html")
+        paintingId = request.form.get("id")
+        if not paintingId:
+            return "<h1>No Painting Id</h1>"
+        if session.get("cart") is None:
+            print("No cart in session")
+            session["cart"] = []
+        # Adding an empty array as a cart for the user
+        print("Session cart new call function", session["cart"])
+        myCart = session["cart"]
+        myCart.append(paintingId)
+        print("The cart is:", myCart)
+        session["cart"] = myCart
+        session.modified = True
+        print("Painting with id", paintingId, "added to cart!")
+        print("Here in add to cart:", session["cart"])
+        return redirect("/buy")
     else:
-       return render_template("buy.html")
+       return redirect("/buy")
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
@@ -173,9 +185,7 @@ def sell():
             if allowed_image(image.filename):
                 filename = secure_filename(image.filename)
                 address = join(app.config["UPLOAD_FOLDER"], filename)
-                print("The address is: ", address)
                 image.save(address)
-                print("Image saved!")
                 title = request.form.get("title")
                 artist = request.form.get("artist")
                 price = request.form.get("price")
@@ -198,7 +208,19 @@ def sell():
 @login_required
 def cart():
     if request.method == "GET":
-        return render_template("cart.html")
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            print("The items in cart are: ", session["cart"])
+            sql_query = "select * from paintings where id in (" + ",".join(
+                (str(n) for n in session["cart"])) + ")"
+            db.execute(sql_query)
+            print("query executed")
+            rows = db.fetchall
+            print("The value of rows is: ", rows)
+            total = 0
+            for row in rows:
+                total = total + row[3]
+        return render_template("cart.html", rows = rows, total = total)
     else:
         return redirect("/")
 

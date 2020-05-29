@@ -1,55 +1,48 @@
 {% extends 'layout.html' %}
 
 {% block title %}
-    Cart
+Cart
 {% endblock %}
 
 {% block styleCart %}
-    style="background-color: white;"
+style="background-color: white;"
 {% endblock %}
 {% block activeCart %}
-    active
+active
 {% endblock %}
 
 {% block main %}
-    <section id="cart">
-        <div id="cart-top" class="d-flex flex-column justify-content-center align-items-center top" style="
+<section id="cart">
+    <div id="cart-top" class="d-flex flex-column justify-content-center align-items-center top" style="
     background-image: url({{ url_for('static', filename='images/cart.jpg') }});">
-            <h2 class="display-3 font-weight-bold" style="color:white;">Cart</h2>
-        </div>
-        <div id="cart-items" class="my-5 container">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th scope="col">Art</th>
-                        <th scope="col">Seller</th>
-                        <th scope="col">Price</th>
-                    </tr>
-                </thead>
-                <tfoot>
-                    <tr>
-                        <td colspan="2"></td>
-                        <td>$2253</td>
-                    </tr>
-                </tfoot>
-                <tbody>
-                    <tr>
-                        <td><img src="{{ url_for('static', filename='images/cart.jpg') }}" alt="" width="auto" height="100px"></td>
-                        <td>Otto</td>
-                        <td>$380</td>
-                    </tr>
-                    <tr>
-                        <td><img src="{{ url_for('static', filename='images/cart.jpg') }}" alt="" width="auto" height="100px"></td>
-                        <td>Thornton</td>
-                        <td>$965</td>
-                    </tr>
-                    <tr>
-                        <td><img src="{{ url_for('static', filename='images/cart.jpg') }}" alt="" width="auto" height="100px"></td>
-                        <td>The Art Gallery</td>
-                        <td>$908</td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-    </section>
+        <h2 class="display-3 font-weight-bold" style="color:white;">Cart</h2>
+    </div>
+    <div id="cart-items" class="my-5 container">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">Title</th>
+                    <th scope="col">Seller</th>
+                    <th scope="col">Price</th>
+                </tr>
+            </thead>
+            <tfoot>
+                <tr>
+                    <td colspan="2"></td>
+                    <td>${{ total }}</td>
+                </tr>
+            </tfoot>
+            <tbody>
+                {% for row in rows %}
+                <tr>
+                    <td><img src="{{ url_for('static', filename='images/cart.jpg') }}" alt="" width="auto"
+                            height="100px"></td>
+                    <td>{{ row[1] }}</td>
+                    <td>{{ row[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
 {% endblock %}

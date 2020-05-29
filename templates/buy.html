@@ -31,7 +31,7 @@ active
                                     <p class="card-text"><small class="text-muted">Posted on {{ row[5] }}</small></p>
                                     <input type="text" name="id" value="2" style="display: none;">
                                     <form action="/addToCart" method="post">
-                                        <input type="text" name="id" value="2" style="display: none;">
+                                        <input type="text" name="id" value="{{ row[0] }}" style="display: none;">
                                         <button type=submit class="btn btn-success px-4">Buy</button>
                                     </form>
                                 </div>
