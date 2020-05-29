@@ -35,10 +35,10 @@ active
             <tbody>
                 {% for row in rows %}
                 <tr>
-                    <td><img src="{{ url_for('static', filename='images/cart.jpg') }}" alt="" width="auto"
+                    <td><img src="{{ url_for('static', filename='uploads/') }}{{ row[4] | basename }}" alt="Cart Image" width="auto"
                             height="100px"></td>
                     <td>{{ row[1] }}</td>
-                    <td>{{ row[3] }}</td>
+                    <td>${{ row[3] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>

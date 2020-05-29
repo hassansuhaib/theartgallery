@@ -203,9 +203,11 @@ def cart():
     if request.method == "GET":
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
-            db.execute(f"SELECT * FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id= {session['user_id']})")
+            myQuery = f"SELECT * FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id= {session['user_id']})"
+            print(myQuery)
+            db.execute(myQuery)
             print("query executed")
-            rows = db.fetchall
+            rows = db.fetchall()
             print(rows)
             print("The value of rows is: ", rows)
             total = 0
