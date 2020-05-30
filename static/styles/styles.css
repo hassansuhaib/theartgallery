@@ -12,7 +12,6 @@
     width: 22rem;
 }
 
-
 #brand {
     font-family: 'Dancing Script', 'Helvetica Neue', Helvetica, Arial;
     font-size: 2rem !important;
@@ -75,7 +74,7 @@
 
 /* buy.html */
 
-#market, #sell-products, #cart, #login, #register {
+.main-section {
     padding-top: 60px;
 }
 

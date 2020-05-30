@@ -5,7 +5,7 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from brains import login_required, format_date
+from brains import login_required, format_date, message
 from os.path import join, basename, splitext
 from base64 import b64encode
 import sqlite3
@@ -72,10 +72,10 @@ def login():
     if request.method == "POST":
         # Ensure username was submitted
         if not request.form.get("username"):
-            return "<h1>Please provide a username!</h1>"
+            return message("Please provide a username!")
         # Ensure password was submitted
         elif not request.form.get("password"):
-            return "<h1>Please provide a password!</h1>"
+            return message("Please provide a password!")
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             username = request.form.get("username")
@@ -83,7 +83,7 @@ def login():
                 "SELECT * FROM users WHERE username= ?",  (username,))
             rows = db.fetchall()
         if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
-            return "<h1>Wrong username or password!</h1>"
+            return message("Wrong username or password!")
         
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
@@ -106,17 +106,17 @@ def register():
         return render_template("register.html")
     else:
         if not request.form.get("name"):
-            return "<h1>must provide a name</h1>"
+            return message("Must provide a name")
         elif not request.form.get("password"):
-            return "<h1>must provide a password</h1>"
+            return message("must provide a password")
         elif not request.form.get("secPassword"):
-            return "<h1>must provide the password again!</h1>"
+            return message("must provide the password again!")
         else:
             name = request.form.get("name")
             password = request.form.get("password")
             secPass = request.form.get("secPassword")
             if password != secPass:
-                return "<h1>Passwords don't match!</h1>"
+                return message("Passwords don't match!")
             else:
                 hashed = generate_password_hash(
                     password, method='pbkdf2:sha256', salt_length=8)
@@ -150,13 +150,14 @@ def buy():
     else:
         return redirect("/")
 
+
 @app.route("/addToCart", methods=["GET", "POST"])
 @login_required
 def addToCart():
     if request.method == "POST":
         paintingId = request.form.get("id")
         if not paintingId:
-            return "<h1>No Painting Id</h1>"
+            return message("No Painting Id")
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             db.execute(
@@ -175,7 +176,7 @@ def sell():
         if request.files:
             image = request.files["artImage"]
             if image.filename =="":
-                return "<h1>Not a proper filename</h1>"
+                return message("Not a valid filename")
             if allowed_image(image.filename):
                 now = datetime.now()
                 formattedDate = now.strftime('%Y-%m-%d %H:%M:%S')
@@ -190,15 +191,15 @@ def sell():
                 artist = request.form.get("artist")
                 price = request.form.get("price")
                 if not title or not price or not artist:
-                    return "<h1>All the info was not provided</h1>"
+                    return message("All the info was not provided")
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
                     db.execute(
-                        "INSERT INTO paintings (title, artist, price, seller, imageAddress, additiondate) VALUES(?,?,?,?,?,?)", (title, artist, price, session["user_id"], address, formattedDate))
+                        "INSERT INTO paintings (title, artist, price, seller, imageAddress, additiondate) VALUES(?,?,?,?,?,?)", (title, artist, price, session["user_name"], address, formattedDate))
                     con.commit()
                 return redirect("/")
             else:
-                return "<h1>That file extension is not allowed</h1>"
+                return message("That file extension is not allowed")
         else:
             return "<h1>Upload unsuccessful!</h1>"
 
@@ -226,7 +227,7 @@ def errorhandler(e):
     """Handle error"""
     if not isinstance(e, HTTPException):
         e = InternalServerError()
-    return "<h1>Internal Server Error!</h1>"
+    return message("Internal Server Error!")
 
 
 # Listen for errors

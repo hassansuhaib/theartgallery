@@ -12,7 +12,7 @@ active
 {% endblock %}
 
 {% block main %}
-<section id="cart">
+<section class="main-section">
     <div id="cart-top" class="d-flex flex-column justify-content-center align-items-center top" style="
     background-image: url({{ url_for('static', filename='images/cart.jpg') }});">
         <h2 class="display-3 font-weight-bold" style="color:white;">Cart</h2>
@@ -30,7 +30,7 @@ active
             </thead>
             <tfoot>
                 <tr>
-                    <td colspan="2"></td>
+                    <td colspan="4"></td>
                     <td>${{ total }}</td>
                 </tr>
             </tfoot>
@@ -41,12 +41,13 @@ active
                             height="100px"></td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
-                    <td>{{ row[4] }}</td>
+                    <td>{{ row[4] }} Hassan</td>
                     <td>${{ row[3] }}</td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        button
     </div>
 </section>
 {% endblock %}

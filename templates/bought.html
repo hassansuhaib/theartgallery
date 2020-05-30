@@ -1,0 +1,24 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Error!
+{% endblock %}
+
+{% block main %}
+<div id="buy-content">
+    <section class="main-section">
+        <div class="message-screen">
+            <div id="buy-top" class="d-flex flex-column justify-content-center align-items-center top" style="
+    background-image: url({{ url_for('static', filename='images/error.jpg') }});">
+                <h2 class="display-3 font-weight-bold" style="color:white;">THANKS!</h2>
+            </div>
+            <div class="container-lg">
+                <div class="jumbotron-fluid mt-5 py-5 d-flex flex-column justify-content-center align-items-center">
+                    <h1 class="display-4">Thanks for shopping with us!</h1>
+                    <input type="button" value="Go back!" onclick="history.back(-1)" class="btn btn-primary mt-5" />
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

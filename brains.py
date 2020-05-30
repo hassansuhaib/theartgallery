@@ -1,4 +1,4 @@
-from flask import session, redirect
+from flask import session, redirect, render_template
 from functools import wraps
 from datetime import datetime
 
@@ -19,3 +19,6 @@ def format_date(datetimeinput):
     """ Make the dates look more appealing """
     
     return datetime.strptime(datetimeinput, "%Y-%m-%d %H:%M:%S").strftime("%b %d, %Y.")
+
+def message(message):
+    return render_template("message.html", message=message)
