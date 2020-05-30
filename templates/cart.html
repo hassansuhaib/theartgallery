@@ -21,7 +21,9 @@ active
         <table class="table">
             <thead>
                 <tr>
+                    <th scope="col">Art</th>
                     <th scope="col">Title</th>
+                    <th scope="col">Artist</th>
                     <th scope="col">Seller</th>
                     <th scope="col">Price</th>
                 </tr>
@@ -35,9 +37,11 @@ active
             <tbody>
                 {% for row in rows %}
                 <tr>
-                    <td><img src="{{ url_for('static', filename='uploads/') }}{{ row[4] | basename }}" alt="Cart Image" width="auto"
+                    <td><img src="{{ url_for('static', filename='uploads/') }}{{ row[5] | basename }}" alt="Cart Image" width="auto"
                             height="100px"></td>
                     <td>{{ row[1] }}</td>
+                    <td>{{ row[2] }}</td>
+                    <td>{{ row[4] }}</td>
                     <td>${{ row[3] }}</td>
                 </tr>
                 {% endfor %}

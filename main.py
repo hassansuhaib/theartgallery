@@ -5,11 +5,11 @@ from werkzeug.utils import secure_filename
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
-from brains import login_required, convert_to_binary
-from os.path import join, basename
+from brains import login_required, format_date
+from os.path import join, basename, splitext
 from base64 import b64encode
-from datetime import datetime
 import sqlite3
+import re
 
 # The location to store the uploaded images
 UPLOAD_FOLDER = r"D:\Coding\projects\the-art-gallery\static\uploads"
@@ -21,8 +21,9 @@ app = Flask(__name__, static_url_path='/static')
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# TO use basenmae filer in template using jinja 
+# TO use basename and format_date filer in template using jinja 
 app.add_template_filter(basename)
+app.add_template_filter(format_date)
 
 # Ensure responses aren't cached
 @app.after_request
@@ -176,20 +177,24 @@ def sell():
             if image.filename =="":
                 return "<h1>Not a proper filename</h1>"
             if allowed_image(image.filename):
+                now = datetime.now()
+                formattedDate = now.strftime('%Y-%m-%d %H:%M:%S')
                 filename = secure_filename(image.filename)
+                # To make the filename unique
+                extension = splitext(filename)[1]
+                filename = splitext(filename)[0]
+                filename = filename + re.sub('[^a-zA-Z0-9_]+', "", formattedDate) + extension
                 address = join(app.config["UPLOAD_FOLDER"], filename)
                 image.save(address)
                 title = request.form.get("title")
                 artist = request.form.get("artist")
                 price = request.form.get("price")
-                now = datetime.now()
-                formattedDate = now.strftime('%Y-%m-%d %H:%M:%S')
                 if not title or not price or not artist:
                     return "<h1>All the info was not provided</h1>"
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
                     db.execute(
-                        "INSERT INTO paintings (title, artist, price, imageAddress, additiondate) VALUES(?,?,?,?,?)", (title, artist, price, address, formattedDate))
+                        "INSERT INTO paintings (title, artist, price, seller, imageAddress, additiondate) VALUES(?,?,?,?,?,?)", (title, artist, price, session["user_id"], address, formattedDate))
                     con.commit()
                 return redirect("/")
             else:

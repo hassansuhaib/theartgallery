@@ -1,5 +1,6 @@
 from flask import session, redirect
 from functools import wraps
+from datetime import datetime
 
 def login_required(f):
     """
@@ -14,10 +15,7 @@ def login_required(f):
         return f(*args, **kwargs)
     return decorated_function
 
-def convert_to_binary(filename):
-    # Convert the images into binary to store in Database
-    with open(filename, 'rb') as file:
-        blobData = file.read()
-    return blobData
-
-
+def format_date(datetimeinput):
+    """ Make the dates look more appealing """
+    
+    return datetime.strptime(datetimeinput, "%Y-%m-%d %H:%M:%S").strftime("%b %d, %Y.")
