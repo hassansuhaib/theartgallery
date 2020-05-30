@@ -210,18 +210,22 @@ def cart():
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             myQuery = f"SELECT * FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id= {session['user_id']})"
-            print(myQuery)
             db.execute(myQuery)
-            print("query executed")
             rows = db.fetchall()
-            print(rows)
-            print("The value of rows is: ", rows)
             total = 0
             for row in rows:
                 total = total + row[3]
         return render_template("cart.html", rows = rows, total = total)
     else:
         return redirect("/")
+
+
+@app.route("/bought", methods=["GET"])
+@login_required
+def bought():
+    if request.method =="GET":
+        return render_template("bought.html")
+    return redirect("/")
 
 def errorhandler(e):
     """Handle error"""

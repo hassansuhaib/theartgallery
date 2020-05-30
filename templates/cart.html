@@ -18,14 +18,14 @@ active
         <h2 class="display-3 font-weight-bold" style="color:white;">Cart</h2>
     </div>
     <div id="cart-items" class="my-5 container">
-        <table class="table">
+        <table class="table table-responsive-sm">
             <thead>
                 <tr>
-                    <th scope="col">Art</th>
-                    <th scope="col">Title</th>
-                    <th scope="col">Artist</th>
-                    <th scope="col">Seller</th>
-                    <th scope="col">Price</th>
+                    <th scope="col" style="width: 20%">Art</th>
+                    <th scope="col" style="width: 20%">Title</th>
+                    <th scope="col" style="width: 20%">Artist</th>
+                    <th scope="col" style="width: 20%">Seller</th>
+                    <th scope="col" style="width: 20%">Price</th>
                 </tr>
             </thead>
             <tfoot>
@@ -47,7 +47,34 @@ active
                 {% endfor %}
             </tbody>
         </table>
-        button
+        <div class="container d-flex justify-content-center">
+            <button type="button" class="btn btn-primary px-3 align-self-center" data-toggle="modal" data-target="#buyModal">
+                Buy
+            </button>
+            
+            <!-- Modal -->
+            <div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="confirmation"
+                aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="confirmation">Confirmation</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+                            Do you want to buy the item(s) for ${{ total }}?
+                        </div>
+                        <div class="modal-footer d-flex justify-content-center">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                            <a href="/bought" class="btn btn-success px-4">Buy</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
     </div>
 </section>
 {% endblock %}
