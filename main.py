@@ -127,6 +127,13 @@ def register():
                     con.commit()
         return redirect("/login")
 
+
+@app.route("/dashboard", methods=["GET", "POST"])
+@login_required
+def dashboard():
+    if request.method == "GET":
+        return render_template("dashboard.html")
+
 @app.route("/logout")
 def logout():
     """Log user out"""
