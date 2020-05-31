@@ -186,18 +186,21 @@ def addCash():
 def changeUsername():
     if request.method == "POST":
         username = request.form.get("newUsername")
+        if username == " ":
+            return message("Please provide a username!")            
         # Establish a connection with database and update username
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
-            db.execute(f"SELECT * FROM users WHERE username = {username}")
+            db.execute(f"SELECT * FROM users WHERE username = '{username}'")
             rows = db.fetchall()
             if len(rows) > 0:
                 return message("Username already exists")
             db.execute(
-                f"UPDATE users SET username = {username} WHERE id = {session['user_id']}")
+                f"UPDATE users SET username = '{username}' WHERE id = {session['user_id']}")
+            db.execute(f"UPDATE paintings SET seller = '{username}' WHERE seller = '{session['user_name']}'")
             con.commit()
-            return redirect("/dashboard")
-            # change=True, alert="Username updated successfully!"
+            session['user_name'] = username
+            return redirect("/login")
     else:
         return redirect("/dashboard")
 
@@ -213,9 +216,9 @@ def changePassword():
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             db.execute(
-                f"UPDATE users SET hashvalue = {hashed} WHERE id = {session['user_id']}")
+                f"UPDATE users SET hashvalue = '{hashed}' WHERE id = {session['user_id']}")
             con.commit()
-        return redirect("/dashboard")
+        return redirect("/login")
     else:
         return redirect("/dashboard")
 
