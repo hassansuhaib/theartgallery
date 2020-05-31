@@ -7,7 +7,6 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from datetime import datetime
 from brains import login_required, format_date, message
 from os.path import join, basename, splitext
-from base64 import b64encode
 import sqlite3
 import re
 
@@ -325,6 +324,7 @@ def sell():
                     cash = rows[0][6]
                     db.execute(f"UPDATE users SET cash={cash + price} where id={session['user_id']}")
                     con.commit()
+                flash("Hello")
                 return redirect("/sold")
             else:
                 return message("That file extension is not allowed")
