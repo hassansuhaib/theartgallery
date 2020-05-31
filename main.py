@@ -164,11 +164,13 @@ def addCash():
                 f"SELECT cash FROM users WHERE id = {session['user_id']}")
             rows = db.fetchall()
             cash = cash + rows[0][0]
-            db.execute(f"UPDATE users SET cash = {cash}")
+            db.execute(
+                f"UPDATE users SET cash = {cash} WHERE id = {session['user_id']}")
             con.commit()
         return redirect("/dashboard")
     else:
         return redirect("/dashboard")
+
 
 @app.route("/changeUsername", methods=["POST"])
 @login_required
@@ -182,12 +184,14 @@ def changeUsername():
             rows = db.fetchall()
             if len(rows) > 0:
                 return message("Username already exists")
-            db.execute(f"UPDATE users SET username = {username}")
+            db.execute(
+                f"UPDATE users SET username = {username} WHERE id = {session['user_id']}")
             con.commit()
             return redirect("/dashboard")
             # change=True, alert="Username updated successfully!"
     else:
         return redirect("/dashboard")
+
 
 @app.route("/changePassword", methods=["POST"])
 @login_required
@@ -199,11 +203,13 @@ def changePassword():
         # Establish a connection with database and update password
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
-            db.execute(f"UPDATE users SET hashvalue = {hashed}")
+            db.execute(
+                f"UPDATE users SET hashvalue = {hashed} WHERE id = {session['user_id']}")
             con.commit()
         return redirect("/dashboard")
     else:
         return redirect("/dashboard")
+
 
 @app.route("/logout")
 def logout():
@@ -214,6 +220,7 @@ def logout():
 
     # Redirect user to login form
     return redirect("/")
+
 
 @app.route("/buy", methods=["GET", "POST"])
 @login_required
@@ -245,7 +252,8 @@ def addToCart():
             con.commit()
         return redirect("/buy")
     else:
-       return redirect("/buy")
+        return redirect("/buy")
+
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
@@ -255,7 +263,7 @@ def sell():
     else:
         if request.files:
             image = request.files["artImage"]
-            if image.filename =="":
+            if image.filename == "":
                 return message("Not a valid filename")
             if allowed_image(image.filename):
                 now = datetime.now()
@@ -264,7 +272,8 @@ def sell():
                 # To make the filename unique
                 extension = splitext(filename)[1]
                 filename = splitext(filename)[0]
-                filename = filename + re.sub('[^a-zA-Z0-9_]+', "", formattedDate) + extension
+                filename = filename + \
+                    re.sub('[^a-zA-Z0-9_]+', "", formattedDate) + extension
                 address = join(app.config["UPLOAD_FOLDER"], filename)
                 image.save(address)
                 title = request.form.get("title")
@@ -283,6 +292,7 @@ def sell():
         else:
             return message("Upload unsuccessful!")
 
+
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
 def cart():
@@ -293,25 +303,38 @@ def cart():
             db.execute(myQuery)
             rows = db.fetchall()
             if not rows:
-                return render_template("cart.html", empty = True)
+                return render_template("cart.html", empty=True)
             total = 0
             for row in rows:
                 total = total + row[3]
-        return render_template("cart.html", rows = rows, total = total)
+        return render_template("cart.html", rows=rows, total=total)
     else:
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(f"SELECT * FROM users WHERE id = {session['user_id']}")
+            rows = db.fetchall()
+            cash = rows[0][6]
+            total = request.form.get("total")
+            if not total:
+                return message("No value in total!")
+            if total > cash:
+                return message("You don't have enough funds for the puchase!")
+            else:
+                db.execute(f"UPDATE users SET cash = {cash - total} WHERE id = {session['user_id']}")
+            db.execute(
+                f"DELETE FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id = {session['user_id']})")
+            db.execute(
+                f"DELETE FROM cart WHERE user_id = {session['user_id']}")
         return redirect("/")
 
 
 @app.route("/bought", methods=["GET"])
 @login_required
 def bought():
-    if request.method =="GET":
-        with sqlite3.connect("gallery.db") as con:
-            db = con.cursor()
-            db.execute(f"DELETE FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id = {session['user_id']})")
-            db.execute(f"DELETE FROM cart WHERE user_id = {session['user_id']}")
+    if request.method == "GET":
         return render_template("bought.html")
     return redirect("/")
+
 
 def errorhandler(e):
     """Handle error"""

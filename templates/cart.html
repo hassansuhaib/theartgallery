@@ -79,7 +79,11 @@ active
                         </div>
                         <div class="modal-footer d-flex justify-content-center">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                            <a href="/bought" class="btn btn-success px-4">Buy</a>
+                            <form action="/cart" method="post">
+                                <input type="number" name="total" value="{{ total }}" style="display: none;">
+                                <button type="submit" class="btn btn-success px-4">Buy</button>
+                            </form>
+                            
                         </div>
                     </div>
                 </div>
