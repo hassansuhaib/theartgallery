@@ -306,6 +306,10 @@ def cart():
 @login_required
 def bought():
     if request.method =="GET":
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(f"DELETE FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id = {session['user_id']})")
+            db.execute(f"DELETE FROM cart WHERE user_id = {session['user_id']}")
         return render_template("bought.html")
     return redirect("/")
 
