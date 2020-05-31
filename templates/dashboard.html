@@ -6,11 +6,74 @@ Dashboard
 
 {% block main %}
 <div id="dashboard-content">
-    <section class="main-section">
+    <section class="main-section mb-5">
         <div class="message-screen">
             <div id="buy-top" class="d-flex flex-column justify-content-center align-items-center top" style="
             background-image: url({{ url_for('static', filename='images/dashboard.jpg') }});">
-                <h2 class="display-3 font-weight-bold" style="color:white;">DASHBOARD</h2>
+                <h1 class="display-3 font-weight-bold" style="color:white;">DASHBOARD</h1>
+            </div>
+            <div class="container mt-5">
+                <div class="jumbotron dash-jumbo text-center p-3">
+                    <h1 class="display-4">Good Evening, Hassan!</h1>
+                </div>
+            </div>
+            {% if change == True %}
+                <div class="container mt-5">
+                    <div class="alert alert-success" role="alert">
+                        {{ alert }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            {% endif %}
+            <div class="container mt-5">
+                <div class="row d-flex justify-content-around">
+                    <div class="col-10 col-md-5 p-4 shadow text-center">
+                        <h3 class="display-5">Balance</h3>
+                        <p class="lead mt-4"><strong>${{ cash }}</strong></p>
+                    </div>
+                    <div class="col-10 col-md-5 p-4 shadow mt-5 mt-md-0 text-center d-flex justify-content-center">
+                        <form action="/addCash" method="post">
+                            <h3 class="display-5">Add Cash</h3>
+                            <div class="form-group mt-3"> 
+                                <input type="number" name="moreCash" class="form-control" id="inputCash"
+                                    placeholder="200" required>
+                            </div>
+                            <div class="form-group d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <div class="row d-flex justify-content-around">
+                    <div class="col-10 col-md-5 p-4 shadow text-center d-flex justify-content-center">
+                        <form action="/changeUsername" method="post">
+                            <h3 class="display-5">Change Username</h3>
+                            <div class="form-group mt-3">
+                                <input type="text" name="newUsername" class="form-control" id="newUsername"
+                                    placeholder="New Username" required>
+                            </div>
+                            <div class="form-group d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-10 col-md-5 p-4 shadow mt-5 mt-md-0 text-center d-flex justify-content-center">
+                        <form action="/changePassword" method="post">
+                            <h3 class="display-5">Change Password</h3>
+                            <div class="form-group mt-3">
+                                <input type="text" name="moreCash" id="newPassword" class="form-control"
+                                    placeholder="New Password" required>
+                            </div>
+                            <div class="form-group d-flex justify-content-center">
+                                <button type="submit" class="btn btn-primary">Update</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </section>

@@ -21,17 +21,20 @@ app = Flask(__name__, static_url_path='/static')
 # Ensure templates are auto-reloaded
 app.config["TEMPLATES_AUTO_RELOAD"] = True
 
-# TO use basename and format_date filer in template using jinja 
+# TO use basename and format_date filer in template using jinja
 app.add_template_filter(basename)
 app.add_template_filter(format_date)
 
 # Ensure responses aren't cached
+
+
 @app.after_request
 def after_request(response):
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
     response.headers["Expires"] = 0
     response.headers["Pragma"] = "no-cache"
     return response
+
 
 # Configure upload folder for images
 app.config["UPLOAD_FOLDER"] = UPLOAD_FOLDER
@@ -63,10 +66,11 @@ def allowed_image(filename):
 def index():
     return render_template("index.html")
 
+
 @app.route("/login", methods=["GET", "POST"])
 def login():
     """Log user in"""
-    #clear session if any previous users
+    # clear session if any previous users
     session.clear()
 
     if request.method == "POST":
@@ -84,7 +88,7 @@ def login():
             rows = db.fetchall()
         if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
             return message("Wrong username or password!")
-        
+
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
         session["user_name"] = rows[0][1]
@@ -96,6 +100,7 @@ def login():
 
     # Remember which user has logged in
     # session["user_id"] = rows[0]["id"]
+
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
@@ -114,7 +119,7 @@ def register():
         elif request.form.get("firstName") == " " or request.form.get("lastName") == " ":
             return message("Please prove valid first and last names!")
         else:
-            name = request.form.get("name")
+            name = request.form.get("username")
             password = request.form.get("password")
             secPass = request.form.get("secPassword")
             firstName = request.form.get("firstName")
@@ -128,7 +133,8 @@ def register():
                 # Establish a connection with database and add data
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
-                    db.execute("INSERT INTO users (username, hashvalue, firstname, lastname, country) VALUES(?,?,?,?,?)",(name, hashed, firstName, lastName, country))
+                    db.execute("INSERT INTO users (username, hashvalue, firstname, lastname, country) VALUES(?,?,?,?,?)", (
+                        name, hashed, firstName, lastName, country))
                     con.commit()
         return redirect("/login")
 
@@ -137,7 +143,67 @@ def register():
 @login_required
 def dashboard():
     if request.method == "GET":
-        return render_template("dashboard.html")
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(
+                f"SELECT cash FROM users WHERE id = {session['user_id']}")
+            rows = db.fetchall()
+            cash = rows[0][0]
+        return render_template("dashboard.html", cash=cash)
+
+
+@app.route("/addCash", methods=["POST"])
+@login_required
+def addCash():
+    if request.method == "POST":
+        cash = int(request.form.get("moreCash"))
+        # Establish a connection with database and update cash
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(
+                f"SELECT cash FROM users WHERE id = {session['user_id']}")
+            rows = db.fetchall()
+            cash = cash + rows[0][0]
+            db.execute(f"UPDATE users SET cash = {cash}")
+            con.commit()
+        return redirect("/dashboard")
+    else:
+        return redirect("/dashboard")
+
+@app.route("/changeUsername", methods=["POST"])
+@login_required
+def changeUsername():
+    if request.method == "POST":
+        username = request.form.get("newUsername")
+        # Establish a connection with database and update username
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(f"SELECT * FROM users WHERE username = {username}")
+            rows = db.fetchall()
+            if len(rows) > 0:
+                return message("Username already exists")
+            db.execute(f"UPDATE users SET username = {username}")
+            con.commit()
+            return redirect("/dashboard")
+            # change=True, alert="Username updated successfully!"
+    else:
+        return redirect("/dashboard")
+
+@app.route("/changePassword", methods=["POST"])
+@login_required
+def changePassword():
+    if request.method == "POST":
+        password = request.form.get("newPassword")
+        hashed = generate_password_hash(
+            password, method='pbkdf2:sha256', salt_length=8)
+        # Establish a connection with database and update password
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(f"UPDATE users SET hashvalue = {hashed}")
+            con.commit()
+        return redirect("/dashboard")
+    else:
+        return redirect("/dashboard")
 
 @app.route("/logout")
 def logout():
@@ -158,6 +224,8 @@ def buy():
             db.execute(
                 "SELECT * FROM paintings ORDER BY id")
             rows = db.fetchall()
+            if not rows:
+                return render_template("buy.html", empty=True)
         return render_template("buy.html", rows=rows)
     else:
         return redirect("/")
@@ -213,7 +281,7 @@ def sell():
             else:
                 return message("That file extension is not allowed")
         else:
-            return "<h1>Upload unsuccessful!</h1>"
+            return message("Upload unsuccessful!")
 
 @app.route("/cart", methods=["GET", "POST"])
 @login_required
@@ -224,6 +292,8 @@ def cart():
             myQuery = f"SELECT * FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id= {session['user_id']})"
             db.execute(myQuery)
             rows = db.fetchall()
+            if not rows:
+                return render_template("cart.html", empty = True)
             total = 0
             for row in rows:
                 total = total + row[3]

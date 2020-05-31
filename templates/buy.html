@@ -17,12 +17,23 @@ active
                 <h2 class="display-3 font-weight-bold" style="color:white;">BUY</h2>
             </div>
             <div class="container-lg">
-                <div id="items" class="row justify-content-center mt-5">
-                    {% for row in rows %}
+                {% if empty == True %}
+                    <div class="container my-5">
+                        <div class="jumbotron dash-jumbo text-center p-3">
+                            <h1 class="display-4">Sorry there are no items up for sale right now!</h1>
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <a href="/sell" class="btn btn-primary">I'll sell instead</a>
+                        </div>
+                    </div>
+                {% else %}
+                    <div id="items" class="row justify-content-center mt-5">
+                        {% for row in rows %}
                         <div class="col-12 col-md-6 col-lg-4 d-flex justify-content-center">
                             <div class="card m-4 shadow bg-white rounded" style="width: 20rem;">
                                 <div class="inner">
-                                    <img class="card-img-top" src="{{ url_for('static', filename='uploads/') }}{{ row[5] | basename }}" alt="Card image cap" height="180" width="286">
+                                    <img class="card-img-top" src="{{ url_for('static', filename='uploads/') }}{{ row[5] | basename }}"
+                                        alt="Card image cap" height="180" width="286">
                                 </div>
                                 <div class="card-body text-center">
                                     <h5 class="card-title">{{ row[1] }}</h5>
@@ -37,8 +48,9 @@ active
                                 </div>
                             </div>
                         </div>
-                    {% endfor %}
-                </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
             </div>
         </div>
     </section>

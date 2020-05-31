@@ -1,5 +1,4 @@
-static/images/
-static/fonts/
 static/bootstrap/
-static/uploads/
+__pycache__/
+.vscode
 myprog.py

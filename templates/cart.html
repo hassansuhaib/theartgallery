@@ -18,6 +18,16 @@ active
         <h2 class="display-3 font-weight-bold" style="color:white;">Cart</h2>
     </div>
     <div id="cart-items" class="my-5 container">
+        {% if empty == True %}
+        <div class="container my-5">
+            <div class="jumbotron dash-jumbo text-center p-3">
+                <h1 class="display-4">Your cart is empty!</h1>
+            </div>
+            <div class="d-flex justify-content-center">
+                <a href="/buy" class="btn btn-primary">Take me to market!</a>
+            </div>
+        </div>
+        {% else %}
         <table class="table table-responsive-sm">
             <thead>
                 <tr>
@@ -37,8 +47,8 @@ active
             <tbody>
                 {% for row in rows %}
                 <tr>
-                    <td><img src="{{ url_for('static', filename='uploads/') }}{{ row[5] | basename }}" alt="Cart Image" width="auto"
-                            height="100px"></td>
+                    <td><img src="{{ url_for('static', filename='uploads/') }}{{ row[5] | basename }}" alt="Cart Image"
+                            width="auto" height="100px"></td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
                     <td>{{ row[4] }} Hassan</td>
@@ -48,10 +58,11 @@ active
             </tbody>
         </table>
         <div class="container d-flex justify-content-center">
-            <button type="button" class="btn btn-success px-3 align-self-center" data-toggle="modal" data-target="#buyModal">
+            <button type="button" class="btn btn-success px-3 align-self-center" data-toggle="modal"
+                data-target="#buyModal">
                 Buy
             </button>
-            
+
             <!-- Modal -->
             <div class="modal fade" id="buyModal" tabindex="-1" role="dialog" aria-labelledby="confirmation"
                 aria-hidden="true">
@@ -74,7 +85,8 @@ active
                 </div>
             </div>
         </div>
-        
+        {% endif %}
+
     </div>
 </section>
 {% endblock %}

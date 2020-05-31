@@ -1,6 +1,6 @@
 /* Header Styling */
 
-.jumbotron {
+.my-jumbo {
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -8,7 +8,7 @@
     height: 100vh;
 }
 
-.jumbotron hr {
+.my-jumbo hr {
     width: 22rem;
 }
 
@@ -104,8 +104,10 @@
     transform: scale(1.5);
 }
 
-/* Sell.html */
-
+/* dashboard.html */
+.dash-jumbo {
+    background-color: white;
+}
 /* Cart.html */
 
 .empty {
