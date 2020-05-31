@@ -83,8 +83,10 @@ def login():
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             username = request.form.get("username")
+            if username == " ":
+                return message("Please provide a valid username")
             db.execute(
-                "SELECT * FROM users WHERE username= ?",  (username,))
+                f"SELECT * FROM users WHERE username='{username}'")
             rows = db.fetchall()
         if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
             return message("Wrong username or password!")
@@ -119,7 +121,7 @@ def register():
         elif request.form.get("firstName") == " " or request.form.get("lastName") == " ":
             return message("Please prove valid first and last names!")
         else:
-            name = request.form.get("username")
+            username = request.form.get("username")
             password = request.form.get("password")
             secPass = request.form.get("secPassword")
             firstName = request.form.get("firstName")
@@ -133,9 +135,14 @@ def register():
                 # Establish a connection with database and add data
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
-                    db.execute("INSERT INTO users (username, hashvalue, firstname, lastname, country) VALUES(?,?,?,?,?)", (
-                        name, hashed, firstName, lastName, country))
-                    con.commit()
+                    db.execute(f"SELECT * FROM users WHERE username='{username}'")
+                    rows = db.fetchall()
+                    if not rows:
+                        db.execute("INSERT INTO users (username, hashvalue, firstname, lastname, country) VALUES(?,?,?,?,?)", (
+                            username, hashed, firstName, lastName, country))
+                        con.commit()
+                    else:
+                        return message("This username is already exists. Please try another one!")
         return redirect("/login")
 
 
@@ -325,6 +332,7 @@ def cart():
                 f"DELETE FROM paintings WHERE id IN (SELECT painting_id FROM cart WHERE user_id = {session['user_id']})")
             db.execute(
                 f"DELETE FROM cart WHERE user_id = {session['user_id']}")
+            con.commit()
         return redirect("/")
 
 
