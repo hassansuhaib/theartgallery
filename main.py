@@ -1,4 +1,4 @@
-from flask import Flask, redirect, url_for, render_template, request, session
+from flask import Flask, redirect, url_for, render_template, request, session, flash
 from flask_session import Session
 from tempfile import mkdtemp
 from werkzeug.utils import secure_filename
@@ -251,18 +251,39 @@ def buy():
 @login_required
 def addToCart():
     if request.method == "POST":
-        paintingId = request.form.get("id")
+        paintingId = int(request.form.get("id"))
         if not paintingId:
             return message("No Painting Id")
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
-            db.execute(
-                "INSERT INTO cart (user_id, painting_id) VALUES(?,?)", (session["user_id"], paintingId))
-            con.commit()
+            db.execute(f"SELECT * FROM cart WHERE user_id = {session['user_id']}")
+            rows = db.fetchall()
+            for row in rows:
+                if paintingId == row[2]:
+                    return message("Item already in cart!")
+            else:
+                db.execute(
+                    "INSERT INTO cart (user_id, painting_id) VALUES(?,?)", (session["user_id"], paintingId))
+                con.commit()
         return redirect("/buy")
     else:
         return redirect("/buy")
 
+
+@app.route("/removeFromCart", methods=["POST"])
+@login_required
+def removeFromCart():
+    if request.method == "POST":
+        paintingId = int(request.form.get("target"))
+        if not paintingId:
+            return message("Painting Id not found in cart!")
+        with sqlite3.connect("gallery.db") as con:
+            db = con.cursor()
+            db.execute(f"DELETE FROM cart WHERE user_id = {session['user_id']} AND painting_id = {paintingId}")
+            con.commit()
+        return redirect("/cart")
+    else:
+        return redirect("/cart")
 
 @app.route("/sell", methods=["GET", "POST"])
 @login_required
@@ -301,11 +322,18 @@ def sell():
                     cash = rows[0][6]
                     db.execute(f"UPDATE users SET cash={cash + price} where id={session['user_id']}")
                     con.commit()
-                return redirect("/")
+                return redirect("/sold")
             else:
                 return message("That file extension is not allowed")
         else:
             return message("Upload unsuccessful!")
+
+@app.route("/sold", methods=["GET"])
+@login_required
+def sold():
+    if request.method == "GET":
+        return render_template("sold.html")
+    return redirect("/")
 
 
 @app.route("/cart", methods=["GET", "POST"])

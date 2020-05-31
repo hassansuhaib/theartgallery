@@ -36,6 +36,8 @@ active
                     <th scope="col" style="width: 20%">Artist</th>
                     <th scope="col" style="width: 20%">Seller</th>
                     <th scope="col" style="width: 20%">Price</th>
+                    <th scope="col" style="width: 20%">Remove</th>
+                    
                 </tr>
             </thead>
             <tfoot>
@@ -51,8 +53,9 @@ active
                             width="auto" height="100px"></td>
                     <td>{{ row[1] }}</td>
                     <td>{{ row[2] }}</td>
-                    <td>{{ row[4] }} Hassan</td>
+                    <td>{{ row[4] }}</td>
                     <td>${{ row[3] }}</td>
+                    <td><form action="/removeFromCart" method="post"><button class="btn btn-danger px-2" name="target" value="{{ row[0] }}">X</button></form></td>
                 </tr>
                 {% endfor %}
             </tbody>
