@@ -105,16 +105,21 @@ def register():
     if request.method == "GET":
         return render_template("register.html")
     else:
-        if not request.form.get("name"):
-            return message("Must provide a name")
-        elif not request.form.get("password"):
-            return message("must provide a password")
-        elif not request.form.get("secPassword"):
-            return message("must provide the password again!")
+        if request.form.get("username") == " ":
+            return message("Please provide a name!")
+        elif request.form.get("password") == " " or request.form.get("secPassword") == " ":
+            return message("Please provide a valid password!")
+        elif request.form.get("country") == " ":
+            return message("Please provide a valid country name!")
+        elif request.form.get("firstName") == " " or request.form.get("lastName") == " ":
+            return message("Please prove valid first and last names!")
         else:
             name = request.form.get("name")
             password = request.form.get("password")
             secPass = request.form.get("secPassword")
+            firstName = request.form.get("firstName")
+            lastName = request.form.get("lastName")
+            country = request.form.get("country")
             if password != secPass:
                 return message("Passwords don't match!")
             else:
@@ -123,7 +128,7 @@ def register():
                 # Establish a connection with database and add data
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
-                    db.execute("INSERT INTO users (username, hashvalue) VALUES(?,?)",(name, hashed))
+                    db.execute("INSERT INTO users (username, hashvalue, firstname, lastname, country) VALUES(?,?,?,?,?)",(name, hashed, firstName, lastName, country))
                     con.commit()
         return redirect("/login")
 
