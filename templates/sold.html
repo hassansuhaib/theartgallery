@@ -1,0 +1,28 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+Sold!
+{% endblock %}
+
+{% block main %}
+<div id="sold-content">
+    <section class="main-section">
+        <div class="message-screen">
+            <div id="buy-top" class="d-flex flex-column justify-content-center align-items-center top" style="
+    background-image: url({{ url_for('static', filename='images/thanks.jpg') }});">
+                <h2 class="display-3 font-weight-bold" style="color:white;">SOLD</h2>
+            </div>
+            <div class="container-lg">
+                <div class="jumbotron-fluid mt-5 py-5 d-flex flex-column justify-content-center align-items-center">
+                    <h1 class="display-4">You just made your sale!</h1>
+                    <p class="lead">Yay! $1000 have been added to your wallet</p>
+                    <div class="container d-flex justify-content-center">
+                        <a class="btn btn-primary mt-5 px-2" href="/sell">Sell some more!</a>
+                        <a class="btn btn-primary mt-5 px-2" href="/buy">I wanna shop!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
+{% endblock %}

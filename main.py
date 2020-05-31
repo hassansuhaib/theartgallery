@@ -88,8 +88,10 @@ def login():
             db.execute(
                 f"SELECT * FROM users WHERE username='{username}'")
             rows = db.fetchall()
-        if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
-            return message("Wrong username or password!")
+            if not rows:
+                return message("User doesn't exist in the database!")
+            if len(rows) != 1 or not check_password_hash(rows[0][2], request.form.get("password")):
+                return message("Wrong username or password!")
 
         # Remember which user has logged in
         session["user_id"] = rows[0][0]
@@ -285,13 +287,19 @@ def sell():
                 image.save(address)
                 title = request.form.get("title")
                 artist = request.form.get("artist")
-                price = request.form.get("price")
+                price = int(request.form.get("price"))
                 if not title or not price or not artist:
                     return message("All the info was not provided")
                 with sqlite3.connect("gallery.db") as con:
                     db = con.cursor()
                     db.execute(
                         "INSERT INTO paintings (title, artist, price, seller, imageAddress, additiondate) VALUES(?,?,?,?,?,?)", (title, artist, price, session["user_name"], address, formattedDate))
+                    db.execute(f"SELECT * FROM users WHERE id={session['user_id']}")
+                    rows = db.fetchall()
+                    if not rows:
+                        return message("Error in retrieving data from the database!")
+                    cash = rows[0][6]
+                    db.execute(f"UPDATE users SET cash={cash + price} where id={session['user_id']}")
                     con.commit()
                 return redirect("/")
             else:
@@ -321,7 +329,7 @@ def cart():
             db.execute(f"SELECT * FROM users WHERE id = {session['user_id']}")
             rows = db.fetchall()
             cash = rows[0][6]
-            total = request.form.get("total")
+            total = int(request.form.get("total"))
             if not total:
                 return message("No value in total!")
             if total > cash:
