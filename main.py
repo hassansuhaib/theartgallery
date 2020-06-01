@@ -324,8 +324,7 @@ def sell():
                     cash = rows[0][6]
                     db.execute(f"UPDATE users SET cash={cash + price} where id={session['user_id']}")
                     con.commit()
-                flash("Hello")
-                return redirect("/sold")
+                return redirect(url_for('sold'))
             else:
                 return message("That file extension is not allowed")
         else:
