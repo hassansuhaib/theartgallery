@@ -151,13 +151,19 @@ def register():
 @login_required
 def dashboard():
     if request.method == "GET":
+        now = datetime.now()
+        hour = int(now.strftime("%H"))
+        greeting = "morning"
+        if hour >= 12 and hour < 18:
+            greeting = "afternoon"
+        elif hour >=18 and hour < 5:
+            greeting = "evening"
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             db.execute(
-                f"SELECT cash FROM users WHERE id = {session['user_id']}")
+                f"SELECT cash, firstname FROM users WHERE id = {session['user_id']}")
             rows = db.fetchall()
-            cash = rows[0][0]
-        return render_template("dashboard.html", cash=cash)
+        return render_template("dashboard.html", cash=rows[0][0], name=rows[0][1], greeting=greeting)
 
 
 @app.route("/addCash", methods=["POST"])
@@ -371,7 +377,7 @@ def cart():
             db.execute(
                 f"DELETE FROM cart WHERE user_id = {session['user_id']}")
             con.commit()
-        return redirect("/")
+        return redirect("/bought")
 
 
 @app.route("/bought", methods=["GET"])
