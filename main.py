@@ -143,7 +143,7 @@ def register():
                             username, hashed, firstName, lastName, country))
                         con.commit()
                     else:
-                        return message("This username is already exists. Please try another one!")
+                        return message("This username already exists. Please try another one!")
         return redirect("/login")
 
 
@@ -368,7 +368,7 @@ def cart():
             total = int(request.form.get("total"))
             if not total:
                 return message("No value in total!")
-            if total > cash:
+            elif total > cash:
                 return message("You don't have enough funds for the puchase!")
             else:
                 db.execute(f"UPDATE users SET cash = {cash - total} WHERE id = {session['user_id']}")
