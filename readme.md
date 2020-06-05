@@ -1,4 +1,4 @@
-## The Art Gallery Project
+## The Art Gallery by Hassan Suhaib
 
 **Purpose:** This project is being build as a Final Project by Hassan Suhaib for completing the cs50 course.
 

@@ -240,7 +240,6 @@ def logout():
 
 
 @app.route("/buy", methods=["GET", "POST"])
-@login_required
 def buy():
     if request.method == "GET":
         with sqlite3.connect("gallery.db") as con:
@@ -310,8 +309,7 @@ def sell():
                 # To make the filename unique
                 extension = splitext(filename)[1]
                 filename = splitext(filename)[0]
-                filename = filename + \
-                    re.sub('[^a-zA-Z0-9_]+', "", formattedDate) + extension
+                filename = filename + re.sub('[^a-zA-Z0-9_]+', "", formattedDate) + extension
                 address = join(app.config["UPLOAD_FOLDER"], filename)
                 image.save(address)
                 title = request.form.get("title")
