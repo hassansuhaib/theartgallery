@@ -153,11 +153,15 @@ def dashboard():
     if request.method == "GET":
         now = datetime.now()
         hour = int(now.strftime("%H"))
-        greeting = "morning"
+        print("The hour is: ", hour)
         if hour >= 12 and hour < 18:
             greeting = "afternoon"
-        elif hour >=18 and hour < 5:
+        elif hour >=18:
             greeting = "evening"
+        elif hour < 5:
+            greeting = "evening"
+        else:
+            greeting = "morning"
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             db.execute(
