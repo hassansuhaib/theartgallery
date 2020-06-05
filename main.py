@@ -144,6 +144,7 @@ def register():
                         con.commit()
                     else:
                         return message("This username already exists. Please try another one!")
+                    session.clear()
                     db.execute(f"SELECT * FROM users WHERE username='{username}'")
                     rows = db.fetchall()
                     if not rows:
