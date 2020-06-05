@@ -144,7 +144,13 @@ def register():
                         con.commit()
                     else:
                         return message("This username already exists. Please try another one!")
-        return redirect("/login")
+                    db.execute(f"SELECT * FROM users WHERE username='{username}'")
+                    rows = db.fetchall()
+                    if not rows:
+                        return redirect("/login")
+                    session["user_id"] = rows[0][0]
+                    session["user_name"] = rows[0][1]
+        return redirect("/")
 
 
 @app.route("/dashboard", methods=["GET", "POST"])
@@ -153,7 +159,6 @@ def dashboard():
     if request.method == "GET":
         now = datetime.now()
         hour = int(now.strftime("%H"))
-        print("The hour is: ", hour)
         if hour >= 12 and hour < 18:
             greeting = "afternoon"
         elif hour >=18:
