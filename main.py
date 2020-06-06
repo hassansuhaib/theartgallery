@@ -158,22 +158,12 @@ def register():
 @login_required
 def dashboard():
     if request.method == "GET":
-        now = datetime.now()
-        hour = int(now.strftime("%H"))
-        if hour >= 12 and hour < 18:
-            greeting = "afternoon"
-        elif hour >=18:
-            greeting = "evening"
-        elif hour < 5:
-            greeting = "evening"
-        else:
-            greeting = "morning"
         with sqlite3.connect("gallery.db") as con:
             db = con.cursor()
             db.execute(
                 f"SELECT cash, firstname FROM users WHERE id = {session['user_id']}")
             rows = db.fetchall()
-        return render_template("dashboard.html", cash=rows[0][0], name=rows[0][1], greeting=greeting)
+        return render_template("dashboard.html", cash=rows[0][0], name=rows[0][1])
 
 
 @app.route("/addCash", methods=["POST"])
